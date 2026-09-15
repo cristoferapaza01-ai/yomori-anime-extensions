@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="eu.kanade.tachiyomi.animeextension.es.monoschinos">
+
+    <application
+        android:hasCode="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="MonosChinos (ES)">
+        
+        <meta-data
+            android:name="animeextension.class"
+            android:value=".MonosChinos" />
+        <meta-data
+            android:name="animeextension.version"
+            android:value="1" />
+        <meta-data
+            android:name="animeextension.nsfw"
+            android:value="0" />
+        <meta-data
+            android:name="animeextension.lang"
+            android:value="es" />
+    </application>
+
+</manifest>

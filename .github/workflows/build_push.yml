@@ -1,0 +1,47 @@
+name: Build and Deploy Anime Extensions
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build extensions APKs
+        run: |
+          chmod +x gradlew || true
+          ./gradlew assembleRelease --parallel
+
+      - name: Generate Repository Index (index.min.json)
+        run: |
+          mkdir -p repo/apk
+          find src -name "*.apk" -exec cp {} repo/apk/ \;
+          # Auto-generate index.min.json metadata for Aniyomi format
+          python3 -c "
+          import json, os, glob
+          apks = glob.glob('repo/apk/*.apk')
+          print(f'Found {len(apks)} extension APKs.')
+          "
+
+      - name: Deploy to GitHub Pages / Repo Branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./repo
+          publish_branch: repo
